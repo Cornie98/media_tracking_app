@@ -316,6 +316,36 @@ class _MediaDetailPageState extends State<MediaDetailPage> {
             ),
           ],
         );
+      case MediaType.game:
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'An immersive open-world adventure with stunning graphics and engaging gameplay.',
+              style: TextStyle(fontSize: 16, height: 1.5),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Developer: Rockstar Games',
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Genre: Action, Adventure',
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Platforms: PC, PS4, PS5, Xbox One, Xbox Series X',
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Release Year: ${widget.mediaItem.creator}',
+              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+            ),
+          ],
+        );
     }
   }
 

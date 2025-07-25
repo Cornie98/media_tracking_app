@@ -17,18 +17,7 @@ class SearchService {
       throw Exception('TMDB API key not configured. Please check your .env file.');
     }
   }
-  static String get _tmdbAccessToken {
-    try {
-      final accessToken = dotenv.env['TMDB_ACCESS_TOKEN'];
-      if (accessToken == null || accessToken.isEmpty) {
-        throw Exception('TMDB_ACCESS_TOKEN not found in environment variables');
-      }
-      return accessToken;
-    } catch (e) {
-      print('Error getting TMDB access token: $e');
-      throw Exception('TMDB access token not configured. Please check your .env file.');
-    }
-  }
+
   static const String _tmdbBaseUrl = 'https://api.themoviedb.org/3';
   
   
@@ -36,6 +25,21 @@ class SearchService {
   
 
   static const String _itunesBaseUrl = 'https://itunes.apple.com';
+
+  // RAWG API for games
+  static String get _rawgApiKey {
+    try {
+      final apiKey = dotenv.env['RAWG_API_KEY'];
+      if (apiKey == null || apiKey.isEmpty) {
+        throw Exception('RAWG_API_KEY not found in environment variables');
+      }
+      return apiKey;
+    } catch (e) {
+      print('Error getting RAWG API key: $e');
+      throw Exception('RAWG API key not configured. Please check your .env file.');
+    }
+  }
+  static const String _rawgBaseUrl = 'https://api.rawg.io/api';
 
 
   static Future<List<MediaItem>> searchMovies(String query) async {
@@ -172,6 +176,42 @@ class SearchService {
     return [];
   }
 
+  static Future<List<MediaItem>> searchGames(String query) async {
+    try {
+      final apiKey = _rawgApiKey;
+      print('[DEBUG] searchGames called with query: $query');
+      final url = '$_rawgBaseUrl/games?key=$apiKey&search=${Uri.encodeComponent(query)}&page_size=20';
+      print('[DEBUG] Requesting URL: $url');
+      final response = await http.get(Uri.parse(url));
+      print('[DEBUG] Response status: ${response.statusCode}');
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final results = data['results'] as List;
+        print('[DEBUG] Number of game results: ${results.length}');
+        
+        return results.map((game) => MediaItem(
+          id: game['id'].toString(),
+          type: MediaType.game,
+          title: game['name'] ?? '',
+          creator: game['released']?.split('-')[0] ?? game['released'] ?? 'Unknown Year',
+          coverUrl: game['background_image'] ?? 'https://via.placeholder.com/300x200?text=No+Image',
+          loggedDate: null,
+          rating: null,
+          review: null,
+        )).toList();
+      } else {
+        print('[DEBUG] Error response body: ${response.body}');
+      }
+    } catch (e) {
+      print('[DEBUG] Error searching games: $e');
+      if (e.toString().contains('RAWG API key not configured')) {
+        print('Please configure your RAWG API key in the .env file');
+      }
+    }
+    return [];
+  }
+
  
   static Future<List<Map<String, dynamic>>> fetchSeasons(String tvId) async {
     final apiKey = _tmdbApiKey;
@@ -223,6 +263,8 @@ class SearchService {
         return await searchBooks(query);
       case MediaType.music:
         return await searchMusic(query);
+      case MediaType.game:
+        return await searchGames(query);
     }
   }
 } 

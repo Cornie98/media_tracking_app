@@ -15,6 +15,7 @@ class _HomePageState extends State<HomePage> {
     'tvShow': [],
     'book': [],
     'music': [],
+    'game': [],
   };
   bool _loadingShelves = true;
   String? _error;
@@ -43,12 +44,16 @@ class _HomePageState extends State<HomePage> {
       stopwatch.reset();
       final music = (await LogService.fetchPopularThisWeekByType('music')).take(20).toList();
       print('[DEBUG] Music shelf loaded in  {stopwatch.elapsedMilliseconds}ms, count:  {music.length}');
+      stopwatch.reset();
+      final games = (await LogService.fetchPopularThisWeekByType('game')).take(20).toList();
+      print('[DEBUG] Games shelf loaded in  {stopwatch.elapsedMilliseconds}ms, count:  {games.length}');
       setState(() {
         shelves['overall'] = overall;
         shelves['movie'] = movies;
         shelves['tvShow'] = tvShows;
         shelves['book'] = books;
         shelves['music'] = music;
+        shelves['game'] = games;
         _loadingShelves = false;
       });
     } catch (e) {
@@ -159,6 +164,7 @@ class _HomePageState extends State<HomePage> {
       case 'tvShow': return MediaType.tvShow;
       case 'book': return MediaType.book;
       case 'music': return MediaType.music;
+      case 'game': return MediaType.game;
       default: return MediaType.movie;
     }
   }
@@ -197,6 +203,7 @@ class _HomePageState extends State<HomePage> {
               if (shelves['tvShow']!.isNotEmpty) _buildShelf('Popular TV Shows', 'tvShow'),
               if (shelves['book']!.isNotEmpty) _buildShelf('Popular Books', 'book'),
               if (shelves['music']!.isNotEmpty) _buildShelf('Popular Music', 'music'),
+              if (shelves['game']!.isNotEmpty) _buildShelf('Popular Games', 'game'),
             ],
           ),
         ),

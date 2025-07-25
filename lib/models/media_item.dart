@@ -1,5 +1,5 @@
 
-enum MediaType { movie, book, tvShow, music }
+enum MediaType { movie, book, tvShow, music, game }
 
 
 class MediaItem {

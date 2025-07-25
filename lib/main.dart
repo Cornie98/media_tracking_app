@@ -2,23 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 import 'firebase_options.dart';
-import 'models/media_item.dart';
-import 'services/search_service.dart';
 import 'services/auth_service.dart';
-import 'services/log_service.dart';
 
 import 'screens/auth/login_screen.dart';
 import 'screens/home_page.dart';
 import 'screens/search_page.dart';
 import 'screens/log_page.dart';
 import 'screens/profile_page.dart';
-import 'screens/media_detail_page.dart';
-import 'screens/select_season_screen.dart';
-import 'screens/select_episodes_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +22,8 @@ void main() async {
     print("FIREBASE_API_KEY: ${dotenv.env['FIREBASE_API_KEY']}");
     print("FIREBASE_PROJECT_ID: ${dotenv.env['FIREBASE_PROJECT_ID']}");
     print("FIREBASE_APP_ID_ANDROID: ${dotenv.env['FIREBASE_APP_ID_ANDROID']}");
+    print("RAWG_API_KEY: ${dotenv.env['RAWG_API_KEY']}");
+    print("TMDB_API_KEY: ${dotenv.env['TMDB_API_KEY']}");
   } catch (e) {
     print("Error loading .env file: $e");
   }

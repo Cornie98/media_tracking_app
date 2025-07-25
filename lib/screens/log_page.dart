@@ -312,20 +312,48 @@ class _LogPageState extends State<LogPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      userRating = index + 1.0;
-                    });
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 4),
-                    child: Icon(
-                      index < (userRating ?? 0) ? Icons.star : Icons.star_border,
+                double starValue = index + 1.0;
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    
+                    Icon(
+                      _getStarIcon(starValue, userRating),
                       color: Colors.amber,
                       size: 40,
                     ),
-                  ),
+                    
+                    Row(
+                      children: [
+                      
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            setState(() {
+                              userRating = index + 0.5;
+                            });
+                          },
+                          child: SizedBox(
+                            width: 20,
+                            height: 40,
+                          ),
+                        ),
+                       
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            setState(() {
+                              userRating = index + 1.0;
+                            });
+                          },
+                          child: SizedBox(
+                            width: 20,
+                            height: 40,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 );
               }),
             ),
@@ -393,5 +421,22 @@ class _LogPageState extends State<LogPage> {
         ),
       ),
     );
+  }
+
+  IconData _getStarIcon(double ratingValue, double? currentRating) {
+    if (currentRating == null) {
+      return Icons.star_border;
+    }
+    
+ 
+    if (ratingValue <= currentRating) {
+      return Icons.star;
+    }
+   
+    if (ratingValue - 0.5 <= currentRating && currentRating < ratingValue) {
+      return Icons.star_half;
+    }
+
+    return Icons.star_border;
   }
 } 
