@@ -23,7 +23,18 @@ import 'screens/select_episodes_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Load environment variables first
+  try {
+    await dotenv.load(fileName: "assets/.env");
+    print("Environment variables loaded successfully");
+    print("FIREBASE_API_KEY: ${dotenv.env['FIREBASE_API_KEY']}");
+    print("FIREBASE_PROJECT_ID: ${dotenv.env['FIREBASE_PROJECT_ID']}");
+    print("FIREBASE_APP_ID_ANDROID: ${dotenv.env['FIREBASE_APP_ID_ANDROID']}");
+  } catch (e) {
+    print("Error loading .env file: $e");
+  }
   
+  // Then initialize Firebase
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -31,12 +42,6 @@ void main() async {
     print('Firebase initialized successfully');
   } catch (e) {
     print('Error initializing Firebase: $e');
-  }
-  
-  try {
-    await dotenv.load(fileName: "assets/.env");
-  } catch (e) {
-    print("Error loading .env file: $e");
   }
   
   runApp(MediaTrackingApp());
